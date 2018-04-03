@@ -4,6 +4,7 @@ import os
 import time
 import subprocess
 import sys
+import math
 
 class VrepHelper():
 
@@ -17,6 +18,9 @@ class VrepHelper():
        self.block_mode = vrep.simx_opmode_blocking
        self.joint_handles = []
        self.start_process = 0
+       self.q = None
+       self.dq = None
+       self.pos = None
 
    def start_vrep(self, waitTime):
 
@@ -42,7 +46,6 @@ class VrepHelper():
         if err_model == (0, 16):
             print ('Taking some more time')
             time.sleep(10)
-
 
    def simulation_setup(self):
 
@@ -78,26 +81,26 @@ class VrepHelper():
         p = 0
         while count < 1: # run for 1 simulated second
 
-            q = np.zeros(len(self.joint_handles))
-            dq = np.zeros(len(self.joint_handles))
-            pos = np.zeros(len(self.joint_handles))
+            self.q = np.zeros(len(self.joint_handles))
+            self.dq = np.zeros(len(self.joint_handles))
+            self.pos = np.zeros(len(self.joint_handles))
 
             print ("t= %f" %(count))
             for ii, joint_handle in enumerate(self.joint_handles):
 
                 # get the joint angles
-                _, q[ii] = vrep.simxGetJointPosition(self.clientID, joint_handle, self.block_mode)
+                _, self.q[ii] = vrep.simxGetJointPosition(self.clientID, joint_handle, self.block_mode)
                 if _ !=0 : raise Exception()
 
                 # get the joint velocity
-                _, dq[ii] = vrep.simxGetObjectFloatParameter(self.clientID, joint_handle, 2012, self.block_mode)  # ID for angular velocity of the joint
+                _, self.dq[ii] = vrep.simxGetObjectFloatParameter(self.clientID, joint_handle, 2012, self.block_mode)  # ID for angular velocity of the joint
                 if _ !=0 : raise Exception()
 
                 vrep.simxSetJointPosition(self.clientID,joint_handle, p, vrep.simx_opmode_oneshot)
 
             print (self.joint_handles)
 
-            print ("Joint Positions in ", q*(180/3.14))
+            print ("Joint Positions in ", self.q*(180/3.14))
             count = count + self.dt
             print ("Time Elapsed in simulation", count)
             p = p + (3.14/180)*5
@@ -109,6 +112,14 @@ class VrepHelper():
         print ("simulation shutting down")
         vrep.simxStopSimulation(self.clientID,vrep.simx_opmode_blocking)
 
+
+   def set_joint_angle(self, j_handle, j_angle):
+
+       '''Set the position of a joint to a particular angle
+
+       Currently operating in one-shot mode only
+       '''
+       vrep.simxSetJointPosition(self.clientID, j_handle, j_angle, vrep.simx_opmode_oneshot)
+
    def end_vrep(self):
         self.start_process.terminate()
-
