@@ -1,5 +1,6 @@
 from Imitation_Learn import Imitation_Learn
 import numpy as np
+import vrep
 
 class Demonstration(Imitation_Learn):
 

@@ -1,6 +1,7 @@
 from VrepHelper import VrepHelper
 import math
 import numpy as np
+import vrep
 
 class Imitation_Learn(VrepHelper):
 
