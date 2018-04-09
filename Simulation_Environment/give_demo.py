@@ -26,7 +26,6 @@ def main(simTime):
 
         print("t= %f" % (count))
         for ii, joint_handle in enumerate(Vp.joint_handles):
-            print("j_handle: ", joint_handle)
             # get the joint angles
             _, Vp.q[ii] = vrep.simxGetJointPosition(Vp.clientID, joint_handle, Vp.block_mode)
             if _ != 0: raise Exception()
@@ -39,7 +38,6 @@ def main(simTime):
             vrep.simxSetJointPosition(Vp.clientID, joint_handle, p, vrep.simx_opmode_oneshot)
 
         # print (Vp.joint_handles)
-        print("Vp.q: ", Vp.q.tolist())
         Il.log_data(Vp.q.tolist(), 'readdatalog.csv')
         # if _ != 0: raise Exception ("Data logging failed in main code")
 
