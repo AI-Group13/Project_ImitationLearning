@@ -32,8 +32,8 @@ class Imitation_Learn(VrepHelper):
         '''Given the 1D list(list of data points) and the filename, this writes the content to a csv file'''
         import csv
         # try:
-        with open(filename, 'a') as datafile:                              # 'original_data.csv'
-            self.recorder = csv.writer(datafile, quoting=csv.QUOTE_ALL)
+        with open(filename, "a") as datafile:                              # 'original_data.csv'
+            self.recorder = csv.writer(datafile, quoting=csv.QUOTE_NONE)
             self.recorder.writerow(data_list)
         #     return 0
         # except:
@@ -46,12 +46,25 @@ class Imitation_Learn(VrepHelper):
             _, self.q[ii] = vrep.simxGetJointPosition(self.clientID, joint_handle, self.block_mode)
             if _ != 0: raise Exception("Joint Data Logging failed")
 
-        status = self.log_data(self.q.tolist(), file)
+        status = self.log_data(self.q, file)
 
         if status==0:
             return 0
         else:
             return 1
+
+    def parse_demo(self, file):
+
+        import csv
+        '''Give the file name where the data is stored, this function will return a list of values to be played'''
+        with open(file, 'r') as datafile:
+            playback_cache = []
+            recorder = csv.reader(datafile, delimiter=" ")
+            for i in recorder:
+                list_l = i[0].split(",")
+                list_l = [float(i) for i in list_l]
+                playback_cache.append(list_l)
+            return playback_cache
 
     def induce_random_noise(self, filenn, err_percent):
         '''Induce random noise in the data recorded from the demonstration to match real-life scenarios'''

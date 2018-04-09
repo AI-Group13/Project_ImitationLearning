@@ -1,4 +1,4 @@
-import vrep 
+import vrep
 import numpy as np
 import os
 import time
@@ -13,7 +13,7 @@ class VrepHelper():
        self.simTime = 1
        self.modelPath = os.getcwd() + "/models/KUKA YouBot.ttm"
        self.scenePath = os.getcwd() + "/scenes/emptyScene.ttt"
-       self.vrepPath = '/home/akshay/Desktop/V-REP_PRO_EDU_V3_4_0_Linux/vrep.sh'
+       self.vrepPath = '/home/onkar-trivedi/V-REP/V-REP_PRO_EDU_V3_5_0_Linux/vrep.sh'
        self.clientID = 0
        self.block_mode = vrep.simx_opmode_blocking
        self.joint_handles = []
@@ -92,14 +92,14 @@ class VrepHelper():
                 _, self.q[ii] = vrep.simxGetJointPosition(self.clientID, joint_handle, self.block_mode)
                 if _ !=0 : raise Exception()
 
-                # get the joint velocity
+                # get the joint velocityp
                 _, self.dq[ii] = vrep.simxGetObjectFloatParameter(self.clientID, joint_handle, 2012, self.block_mode)  # ID for angular velocity of the joint
                 if _ !=0 : raise Exception()
 
                 vrep.simxSetJointPosition(self.clientID,joint_handle, p, vrep.simx_opmode_oneshot)
 
-            # print (self.joint_handles)
-
+            print (self.joint_handles)
+            self.record_demo("Abc.csv")
             print ("Joint Positions in ", self.q*(180/3.14))
             count = count + self.dt
             print ("Time Elapsed in simulation", count)
@@ -110,10 +110,16 @@ class VrepHelper():
 
         # stop our simulation
         print ("simulation shutting down")
-        self.stop_simulation()
+        vrep.simxStopSimulation(self.clientID,vrep.simx_opmode_blocking)
 
-   def stop_simulation(self):
-       vrep.simxStopSimulation(self.clientID, vrep.simx_opmode_blocking)
+
+   def set_joint_angle(self, j_handle, j_angle):
+
+       '''Set the position of a joint to a particular angle
+
+       Currently operating in one-shot mode only
+       '''
+       vrep.simxSetJointPosition(self.clientID, j_handle, j_angle, vrep.simx_opmode_oneshot)
 
    def end_vrep(self):
         self.start_process.terminate()
