@@ -31,14 +31,14 @@ class Imitation_Learn(VrepHelper):
     def log_data(self, data_list, filename):
         '''Given the 1D list(list of data points) and the filename, this writes the content to a csv file'''
         import csv
-        try:
-            with open(filename, 'wb') as datafile:                              # 'original_data.csv'
-                self.recorder = csv.writer(datafile, quoting=csv.QUOTE_ALL)
-                self.recorder.writerow(data_list)
-            return 0
-        except:
-            print("Data logging failed")
-            return 1
+        # try:
+        with open(filename, 'a') as datafile:                              # 'original_data.csv'
+            self.recorder = csv.writer(datafile, quoting=csv.QUOTE_ALL)
+            self.recorder.writerow(data_list)
+        #     return 0
+        # except:
+        #     print("Data logging failed")
+        #     return 1
 
     def record_demo(self, file):
         '''Given the file name where the data is to be stored while logging, it reads the joint angles and writes them into it for each time step'''
@@ -46,7 +46,7 @@ class Imitation_Learn(VrepHelper):
             _, self.q[ii] = vrep.simxGetJointPosition(self.clientID, joint_handle, self.block_mode)
             if _ != 0: raise Exception("Joint Data Logging failed")
 
-        status = self.log_data(self.q, file)
+        status = self.log_data(self.q.tolist(), file)
 
         if status==0:
             return 0

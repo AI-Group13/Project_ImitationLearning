@@ -98,7 +98,7 @@ class VrepHelper():
 
                 vrep.simxSetJointPosition(self.clientID,joint_handle, p, vrep.simx_opmode_oneshot)
 
-            print (self.joint_handles)
+            # print (self.joint_handles)
 
             print ("Joint Positions in ", self.q*(180/3.14))
             count = count + self.dt
@@ -110,16 +110,10 @@ class VrepHelper():
 
         # stop our simulation
         print ("simulation shutting down")
-        vrep.simxStopSimulation(self.clientID,vrep.simx_opmode_blocking)
+        self.stop_simulation()
 
-
-   def set_joint_angle(self, j_handle, j_angle):
-
-       '''Set the position of a joint to a particular angle
-
-       Currently operating in one-shot mode only
-       '''
-       vrep.simxSetJointPosition(self.clientID, j_handle, j_angle, vrep.simx_opmode_oneshot)
+   def stop_simulation(self):
+       vrep.simxStopSimulation(self.clientID, vrep.simx_opmode_blocking)
 
    def end_vrep(self):
         self.start_process.terminate()
