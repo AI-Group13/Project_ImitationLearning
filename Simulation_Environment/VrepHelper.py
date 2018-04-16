@@ -17,7 +17,8 @@ class VrepHelper():
        self.vrepPath = '/home/akshay/Desktop/V-REP_PRO_EDU_V3_4_0_Linux/vrep.sh'
        self.clientID = 0
        self.block_mode = vrep.simx_opmode_blocking
-       self.joint_handles = []
+       self.joint_handles, self.link_handles = [], []
+       self.top_handle = None
        self.start_process = 0
        self.q = None
        self.dq = None
@@ -67,11 +68,12 @@ class VrepHelper():
         # get the handles for each link of the arm
         self.link_handles = [vrep.simxGetObjectHandle(self.clientID,name, self.block_mode)[1] for name in link_names]
 
+        self.top_handle = self.link_handles[0]
+
         # self.base_handle = vrep.simxGetObjectHandle(self.clientID, base_name, self.block_mode)[1]
 
         # By default, V-REP uses argument 3 = -1  to get positions in the world frame -  So the base handle becomes -1
         self.base_handle = -1
-
 
         # get the handles for each joint and set up streaming
         self.joint_handles = [vrep.simxGetObjectHandle(self.clientID,name, self.block_mode)[1] for name in joint_names]
