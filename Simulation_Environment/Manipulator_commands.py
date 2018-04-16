@@ -13,10 +13,16 @@ class Manipulator_Commands(VrepHelper):
         vrep.simxSetJointPosition(self.clientID, j_handle, j_angle, vrep.simx_opmode_oneshot)
 
     def get_joint_angle(self, j_handle):
-        '''Get the joint angle value for a particualar angle
+        '''Get the joint angle value for a particular angle
         Currently operating in one-shot mode only
         '''
         vrep.simxGetJointPosition(self.clientID, j_handle, vrep.simx_opmode_oneshot)
+
+    def get_link_pos(self, link_handle, base_frame):
+        '''Get the position of the object/link using its handle, in the global frame
+        Currently operating in one-shot mode only and with all the position references in the global frame
+        '''
+        vrep.simxGetObjectPosition(self.clientID, link_handle, base_frame, vrep.simx_opmode_oneshot)
 
     def display_status_message(self, message):
         '''Display a message in the status bar'''

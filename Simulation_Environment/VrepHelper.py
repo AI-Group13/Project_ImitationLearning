@@ -13,7 +13,8 @@ class VrepHelper():
        self.simTime = 1
        self.modelPath = os.getcwd() + "/models/KUKA YouBot.ttm"
        self.scenePath = os.getcwd() + "/scenes/emptyScene.ttt"
-       self.vrepPath = '/home/onkar-trivedi/V-REP/V-REP_PRO_EDU_V3_5_0_Linux/vrep.sh'
+       # self.vrepPath = '/home/onkar-trivedi/V-REP/V-REP_PRO_EDU_V3_5_0_Linux/vrep.sh'
+       self.vrepPath = '/home/akshay/Desktop/V-REP_PRO_EDU_V3_4_0_Linux/vrep.sh'
        self.clientID = 0
        self.block_mode = vrep.simx_opmode_blocking
        self.joint_handles = []
@@ -57,11 +58,23 @@ class VrepHelper():
         joint_names = ['youBotArmJoint0', 'youBotArmJoint1', 'youBotArmJoint2', 'youBotArmJoint3', 'youBotArmJoint4',\
                        'youBotGripperJoint1', 'youBotGripperJoint2']
 
+        # Need to get name of the links here before obtaining there handles
+        # link_names = []
+
         # joint target velocities discussed below
         joint_target_velocities = np.ones(len(joint_names)) * 10000000.0
 
+        # get the handles for each link of the arm
+        self.link_handles = [vrep.simxGetObjectHandle(self.clientID,name, self.block_mode)[1] for name in link_names]
+        # self.base_handle = vrep.simxGetObjectHandle(self.clientID, base_name, self.block_mode)[1]
+
+        # By default, V-REP uses argument 3 = -1  to get positions in the world frame -  So the base handle becomes -1
+        self.base_handle = -1
+
+
         # get the handles for each joint and set up streaming
         self.joint_handles = [vrep.simxGetObjectHandle(self.clientID,name, self.block_mode)[1] for name in joint_names]
+
 
         self.dt = 0.02
         vrep.simxSetFloatingParameter(self.clientID, vrep.sim_floatparam_simulation_time_step, self.dt, vrep.simx_opmode_oneshot) # specify a simulation time step
