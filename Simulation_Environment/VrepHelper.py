@@ -59,13 +59,14 @@ class VrepHelper():
                        'youBotGripperJoint1', 'youBotGripperJoint2']
 
         # Need to get name of the links here before obtaining there handles
-        # link_names = []
+        link_names = ['Sphere']
 
         # joint target velocities discussed below
         joint_target_velocities = np.ones(len(joint_names)) * 10000000.0
 
         # get the handles for each link of the arm
         self.link_handles = [vrep.simxGetObjectHandle(self.clientID,name, self.block_mode)[1] for name in link_names]
+
         # self.base_handle = vrep.simxGetObjectHandle(self.clientID, base_name, self.block_mode)[1]
 
         # By default, V-REP uses argument 3 = -1  to get positions in the world frame -  So the base handle becomes -1

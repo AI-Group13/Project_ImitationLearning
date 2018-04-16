@@ -1,9 +1,10 @@
 import csv
-
+import matplotlib.pyplot as plt
 from VrepHelper import *
 from Imitation_Learn import *
 from Manipulator_commands import *
 import vrep
+from evaluate_results import Evaluation
 
 def main():
 
@@ -12,6 +13,7 @@ def main():
     Vp = VrepHelper()
     Il = Imitation_Learn()
     Mc  = Manipulator_Commands()
+    Eval = Evaluation()
 
     # Initializing the V-REP simulation environment
     Vp.start_vrep(10)
@@ -29,12 +31,20 @@ def main():
         '''Set joint value (position[num]) to respective joint handle'''
         for num,joint_handle in enumerate(Vp.joint_handles):
             Mc.set_joint_angle(joint_handle, positions[num])
-            obtained_joint_angles.append(Mc.get_joint_angle(joint_handle))
-        Mc.get
+            obtained_joint_angles.append(Mc.get_joint_angle(joint_handle)[1])
+
+        print ("Given angular positions \n", positions, "\t", type(positions), "\n" )
+        print ("Obtained angular positions \n", obtained_joint_angles, "\t", type(obtained_joint_angles), "\n")
+
+        # Mc.get_link_pos()
+        Eval.main(2, 0,0, positions, obtained_joint_angles)
+        obtained_joint_angles = []
         print("Setting to joint positions: ", positions)
 
         '''Enables synchronous operation mode'''
         vrep.simxSynchronousTrigger(Vp.clientID)
+
+    plt.show()
 
 if __name__ == '__main__':
     main()
