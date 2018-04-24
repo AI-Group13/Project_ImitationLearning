@@ -17,12 +17,45 @@ def talker():
 	pub = rospy.Publisher('signal',String, queue_size = 10)
 	rospy.init_node('signal', anonymous=True)
 	rate = rospy.Rate(10)
-	while not rospy.is_shutdown():
-		message = 'x-0.018 y-0.096 z0.308'
+	
+	x = 0.0
+	z = 0.0
+	for i in range(20):
+		message = 'x'+str(x)+' y-0.00 z'+str(z)
+		rospy.loginfo(message)
+		pub.publish(message)
+		rate.sleep()
+
+	for i in range(20):
+		message = 'x0.16 y0.0 z0.0'
 		rospy.loginfo(message)
 		pub.publish(message)
 		rate.sleep()
 		
+	for i in range(20):
+		message = 'x0.16 y0.0 z0.20'
+		rospy.loginfo(message)
+		pub.publish(message)
+		rate.sleep()
+
+	for i in range(30):
+		message = 'x-0.16 y0.0 z0.20'
+		rospy.loginfo(message)
+		pub.publish(message)
+		rate.sleep()
+
+	for i in range(30):
+		message = 'x-0.16 y0.0 z0.00001'
+		rospy.loginfo(message)
+		pub.publish(message)
+		rate.sleep()
+
+	for i in range(30):
+		message = 'x0.00001 y0.0 z0.00001'
+		rospy.loginfo(message)
+		pub.publish(message)
+		rate.sleep()
+
 		# Currently not using the subscriber, inbuilt lua function works much better #
 		#rospy.Subscriber('/joints', String, iterate)
 
