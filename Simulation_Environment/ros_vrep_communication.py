@@ -2,6 +2,7 @@
 
 import rospy
 from std_msgs.msg import String
+from geometry_msgs.msg import Pose
 from Imitation_Learn import *
 
 Il = Imitation_Learn()
@@ -14,50 +15,57 @@ def iterate(data):
 	Il.log_data(joint_list, 'joint_list.csv')
 
 def talker():
-	pub = rospy.Publisher('signal',String, queue_size = 10)
+	pub = rospy.Publisher('signal',Pose, queue_size = 10)
 	rospy.init_node('signal', anonymous=True)
 	rate = rospy.Rate(10)
-	
-	x = 0.0
-	z = 0.0
+	pos = Pose()	
+
 	for i in range(20):
-		message = 'x'+str(x)+' y-0.00 z'+str(z)
-		rospy.loginfo(message)
-		pub.publish(message)
+		pos.position.x = 0.0
+		pos.position.y = 0.0
+		pos.position.z = 0.0
+		rospy.loginfo(pos)
+		pub.publish(pos)
 		rate.sleep()
 
 	for i in range(20):
-		message = 'x0.16 y0.0 z0.0'
-		rospy.loginfo(message)
-		pub.publish(message)
+		pos.position.x = 0.10
+		pos.position.y = 0.0
+		pos.position.z = 0.0
+		rospy.loginfo(pos)
+		pub.publish(pos)
 		rate.sleep()
 		
 	for i in range(20):
-		message = 'x0.16 y0.0 z0.20'
-		rospy.loginfo(message)
-		pub.publish(message)
+		pos.position.x = 0.10
+		pos.position.y = 0.0
+		pos.position.z = 0.20
+		rospy.loginfo(pos)
+		pub.publish(pos)
 		rate.sleep()
 
 	for i in range(30):
-		message = 'x-0.16 y0.0 z0.20'
-		rospy.loginfo(message)
-		pub.publish(message)
+		pos.position.x = -0.10
+		pos.position.y = 0.0
+		pos.position.z = 0.20
+		rospy.loginfo(pos)
+		pub.publish(pos)
 		rate.sleep()
 
 	for i in range(30):
-		message = 'x-0.16 y0.0 z0.00001'
-		rospy.loginfo(message)
-		pub.publish(message)
+		pos.position.x = -0.10
+		pos.position.y = 0.0
+		pos.position.z = 0.0001
+		rospy.loginfo(pos)
+		pub.publish(pos)
 		rate.sleep()
-
 	for i in range(30):
-		message = 'x0.00001 y0.0 z0.00001'
-		rospy.loginfo(message)
-		pub.publish(message)
+		pos.position.x = 0.0001
+		pos.position.y = 0.0
+		pos.position.z = 0.0001
+		rospy.loginfo(pos)
+		pub.publish(pos)
 		rate.sleep()
-
-		# Currently not using the subscriber, inbuilt lua function works much better #
-		#rospy.Subscriber('/joints', String, iterate)
 
 
 if __name__ == '__main__':
